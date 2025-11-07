@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: campuscircle
+
+server:
+  port: ${PORT:8081}
