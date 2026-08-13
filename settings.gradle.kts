@@ -1,1 +1,1 @@
-rootProject.name = "awslambdatest"
+rootProject.name = "finder"

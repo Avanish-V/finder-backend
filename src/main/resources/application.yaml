@@ -1,6 +1,18 @@
 spring:
   application:
     name: campuscircle
+  datasource:
+    url: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres?prepareThreshold=0
+    username: postgres.tdbsddpiqgtcrwaijpcj
+    password: "EpfNxfMQHJ8ES8id"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
   port: ${PORT:8080}
