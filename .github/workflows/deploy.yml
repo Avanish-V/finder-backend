@@ -1,0 +1,92 @@
+name: Build and Deploy Lambda
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-south-1
+  ECR_REPOSITORY: finder_networking_image
+  LAMBDA_FUNCTION: finder-social-networking
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1. Checkout source code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Java 21
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # 3. Make Gradle executable
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      # 4. Run tests
+      - name: Run tests
+        run: ./gradlew clean test
+
+      # 5. Build Lambda JAR
+      - name: Build Lambda JAR
+        run: ./gradlew shadowJar
+
+      # 6. Configure AWS using GitHub OIDC
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # 7. Login to ECR
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 8. Build Docker image
+      - name: Build Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+        run: |
+          docker build \
+            -f Dockerfile.lambda \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} \
+            .
+
+      # 9. Push image to ECR
+      - name: Push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+        run: |
+          docker push \
+            $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
+
+      # 10. Update Lambda
+      - name: Deploy to Lambda
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+        run: |
+          aws lambda update-function-code \
+            --function-name "$LAMBDA_FUNCTION" \
+            --image-uri "$ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}" \
+            --publish
+
+      # 11. Verify deployment
+      - name: Verify Lambda
+        run: |
+          aws lambda get-function \
+            --function-name "$LAMBDA_FUNCTION" \
+            --query 'Configuration.[FunctionName,LastUpdateStatus,State]' \
+            --output table
