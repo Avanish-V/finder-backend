@@ -1,1 +1,1 @@
-rootProject.name = "finder"
+rootProject.name = "finder-backend"
