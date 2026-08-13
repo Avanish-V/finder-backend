@@ -1,0 +1,69 @@
+﻿> Task :checkKotlinGradlePluginConfigurationErrors
+> Task :processResources UP-TO-DATE
+> Task :check
+
+> Task :compileKotlin FAILED
+./gradlew : e: file:///D:/Bac
+kend/Collabbit/collabbit-back
+end/src/main/kotlin/com/examp
+le/awslambdatest/CollabServic
+e/Service/CollabService.kt:52
+:29 Unresolved reference: 
+profile
+At line:1 char:1
++ ./gradlew build -x test 
+2>&1 | Out-File -Encoding 
+utf8 build_out.txt
++ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (e: file  
+  :///D:/B...erence: profi   
+ le:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+e: file:///D:/Backend/Collabb
+it/collabbit-backend/src/main
+/kotlin/com/example/awslambda
+test/CollabService/Service/Co
+llabService.kt:53:30 
+Unresolved reference: profile
+
+[Incubating] Problems report is available at: file:///D:/Backend/Collabbit/collabbit-backend/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with 
+an exception.
+
+* What went wrong:
+Execution failed for task 
+':compileKotlin'.
+> A failure occurred while 
+executing org.jetbrains.kotli
+n.compilerRunner.GradleCompil
+erRunnerWithWorkers$GradleKot
+linCompilerWorkAction
+   > Compilation error. See 
+log for more details
+
+* Try:
+> Run with --stacktrace 
+option to get the stack 
+trace.
+> Run with --info or --debug 
+option to get more log 
+output.
+> Run with --scan to get 
+full insights.
+> Get more help at 
+https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 5s
+3 actionable tasks: 2 executed, 1 up-to-date

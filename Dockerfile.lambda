@@ -1,0 +1,7 @@
+FROM public.ecr.aws/lambda/java:21
+
+# The Java 21 base image expects JARs in the lib folder for the classpath
+COPY build/libs/*aws.jar ${LAMBDA_TASK_ROOT}/lib/app.jar
+
+# Set the handler - using double colons for the method
+CMD [ "com.iotabuild.campuscircle.StreamLambdaHandler::handleRequest" ]
